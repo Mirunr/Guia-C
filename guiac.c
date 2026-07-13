@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-
+#include <stdlib.h>
 //Realizar el programa que imprima en pantalla el texto Hola, Orga!. Compilar con todos
 //los flags mencionados.
 int ej1(){
@@ -186,7 +186,7 @@ int pruebademasmas(){
 //ej 9) Realizar un programa que compare si los 3 bits m ́as altos de una palabra de 32 bits son iguales a los 3 bits 
 //mas bajos de otra palabra de 32 bits. Si son iguales, informarlo por pantalla.
 
-int main(){
+int shifteoyotros(){
 
 	int32_t a = 1;
 	int32_t b = 8;
@@ -196,3 +196,129 @@ int main(){
 
 	return 0;
 }
+
+
+// sobre el error de segmentation fault al querer modificar un string creado con un puntero:
+//1. El array: char s[] = "Hola!"; (Modificable)
+//Cuando haces esto, el compilador reserva espacio para 6 bytes en la pila (stack) (la memoria local de la función) y copia los caracteres "Hola!" dentro 
+//de ese espacio. Como esa memoria te pertenece y está en una zona de lectura y escritura, puedes cambiar s[0] = 'h' sin problemas.
+//2. El puntero: char *u = "string"; (Inmutable)
+//Aquí estás creando un puntero que apunta directamente a una literal de cadena (string literal). El compilador guarda el texto "string" en una sección 
+//de la memoria llamada .rodata (Read-Only Data / Datos de solo lectura). El puntero u vive en la pila, pero la dirección a la que apunta es de "solo lectura".
+//Al intentar hacer u[0] = 'S', estás intentando escribir en una zona de memoria protegida por el sistema operativo. El sistema operativo detecta esta infracción y mata tu programa inmediatamente con un Segmentation Fault.
+
+
+
+//Ejercicio 11:
+//Realizar un programa que rote un arreglo de números enteros a la izquierda. El arreglo
+//puede estar hardcodeado. Por ejemplo, si el arreglo es [1, 2, 3, 4], el resultado debe
+//ser [2, 3, 4, 1]. Cuando veamos punteros, podremos hacer una función de rotación
+//genérica.
+
+int rotarHardcodeado(){
+    int a[] = {1,2,3,4};
+
+    a[0] = 4;
+    a[1] = 1;
+    a[2] = 2;
+    a[3] = 3;
+
+    for(int i = 0; i < 4; i++){
+        printf("%i ",a[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+//Ejercicio 12:
+//Generalizar el ejercicio anterior para que la rotación sea un parámetro de entrada. Por
+//ejemplo, si el arreglo es [1, 2, 3, 4] y la rotación es 2, el resultado debe ser [3, 4, 1, 2].
+
+int rotación(int arr[], int r, int tam){
+
+    int copia[tam]; 
+
+    for(int i = 0; i < tam; i++){
+        copia[i] = arr[((i+r)%tam)];
+    }
+
+    for(int i = 0; i < tam; i++){
+        printf("%d ", copia[i]);
+    }
+    return 0;
+}
+
+
+int rotarHardcode(){
+
+    int a[] = {0,1,2,3,4,5};  // -> 
+    int t = 6; 
+    int r = 2;
+
+    rotación(a,r,t);
+    return 0;
+}
+
+
+//Realizar un programa que tire un dado de 6 caras 60 millones de veces y cuente la cantidad
+//de veces que salió cada número. Para esto, usar un array de 6 elementos. Luego imprimir
+//el resultado por pantalla. Para tirar el dado aleatoriamente, usar la función rand() de la
+//librerı́a stdlib.h.
+
+int dadoDe6Caras(){
+    int arr[6] = {0};
+
+    uint32_t tiradas = 60000000;
+    while(--tiradas){
+        int tirada = rand() % 6;
+        arr[tirada]++;
+    }
+    for(int i = 0; i < 6; i++){
+        printf("cantidad de veces que salió el %i: %i\n",i+1,arr[i]);
+    }
+    return 0;
+}
+
+//Realizar un programa que declare una variable global y una variable local. Luego, imprimir
+//el valor de ambas variables en la función main. Luego, probar darles el mismo nombre.
+//¿Qué sucede? ¿Por qué?
+
+int i = 0;
+
+int printearMismaVariableGlobal(){
+    int j = 2;
+    printf("%i, %i\n", i, j);
+    return 0;
+}
+
+
+//Realizar un programa que calcule el factorial de un número entero positivo. Para esto,
+//usar una función que reciba el número y devuelva el resultado.
+//El factorial de un número entero positivo n es el producto de todos los números
+//enteros positivos menores o iguales a n. Por ejemplo, el factorial de 5 es 5! =
+//5 × 4 × 3 × 2 × 1 = 120.
+//El factorial de 0 es 1.
+//El factorial de un número negativo no está definido.
+//Se puede realizar utilizando recursión o iteración.
+
+int factorial(int n){
+
+    if(n==0){
+        return 1;
+    }
+    else{
+        return factorial(n-1) * n;
+    }
+}
+
+int main(){
+
+    int n;
+    printf("introduce un número\n");
+
+    scanf("%i", &n);
+
+    printf("el factorial es : %d\n",factorial(n));
+}
+
