@@ -292,33 +292,109 @@ int printearMismaVariableGlobal(){
     return 0;
 }
 
-
-//Realizar un programa que calcule el factorial de un número entero positivo. Para esto,
-//usar una función que reciba el número y devuelva el resultado.
-//El factorial de un número entero positivo n es el producto de todos los números
-//enteros positivos menores o iguales a n. Por ejemplo, el factorial de 5 es 5! =
-//5 × 4 × 3 × 2 × 1 = 120.
-//El factorial de 0 es 1.
-//El factorial de un número negativo no está definido.
-//Se puede realizar utilizando recursión o iteración.
-
-int factorial(int n){
+int factorial1(int n){
 
     if(n==0){
         return 1;
     }
     else{
-        return factorial(n-1) * n;
+        return factorial1(n-1) * n;
     }
 }
 
-int main(){
+int fact(){
 
     int n;
     printf("introduce un número\n");
 
     scanf("%i", &n);
 
-    printf("el factorial es : %d\n",factorial(n));
+    printf("el factorial es : %d\n",factorial1(n));
+
+    return 0;
 }
 
+#define FELIZ 0
+#define TRISTE 1
+
+void ser_feliz1(int estado);
+void print_estado1(int estado);
+
+int ejemploScope(){
+int estado = TRISTE; // automatic duration. Block scope
+ser_feliz1(estado);
+print_estado1(estado); // qué imprime?
+return 0;
+}
+void ser_feliz1(int estado){
+estado = FELIZ;
+}
+void print_estado1(int estado){
+printf("Estoy %s\n", estado == FELIZ ? "feliz" : "triste");
+}
+
+//segundo ejemplo de scope con variable global
+
+int estado = TRISTE; // static duration. File scope
+
+void ser_feliz2();
+void print_estado2();
+
+int masEjemplos(){
+    print_estado2();
+    ser_feliz2();
+    print_estado2(); // qué imprime?
+    return 0; 
+}
+void ser_feliz2(){
+    estado = FELIZ;
+}
+void print_estado2(){
+    printf("Estoy %s\n", estado == FELIZ ? "feliz" : "triste");
+}
+
+//
+
+int estado = TRISTE; // static duration. File scope
+void alcoholizar();
+void print_estado();
+int main(){
+    print_estado();
+    alcoholizar();
+    print_estado();
+    alcoholizar();alcoholizar();alcoholizar();
+    print_estado(); // que imprime?
+}
+void alcoholizar(){
+    static int cantidad = 0; // static duration. block scope  Con static la variable se crea una sola vez y conserva su valor entre llamadas a la función
+    cantidad++;
+    if(cantidad < 3){
+        estado = FELIZ;
+    }else{
+        estado = TRISTE;
+    }
+}
+void print_estado(){
+    printf("Estoy %s\n", estado == FELIZ ? "feliz" : "triste");
+}
+
+
+//ejercicio 20
+/*El siguiente esquema de programa muestra solo definiciones de funciones y de variables.
+Indicar el scope y duración de cada variable.*/
+
+int b, c; //scope global, estática
+void f(void)
+{
+    int b, d;  //scope local, automática
+}
+void g(int a)
+{
+    int c;  //scope local, automática
+    {
+        int a, d;  //scope local, automática
+    }
+}
+
+
+//MACRO: 
